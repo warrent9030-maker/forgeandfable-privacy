@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge &amp; Fable Privacy Policy</title>
+<meta name="description" content="Privacy policy for the Forge &amp; Fable Android application.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1c1b1f;
+    --muted: #5b5860;
+    --rule: #e3e0e6;
+    --accent: #6b4fbb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #131316;
+      --fg: #e7e4ea;
+      --muted: #a39fa9;
+      --rule: #2e2c33;
+      --accent: #b7a2f0;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  main {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 5rem;
+  }
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.2;
+    margin: 0 0 .5rem;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: 1.2rem;
+    margin: 2.5rem 0 .75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    letter-spacing: -0.005em;
+  }
+  .updated {
+    color: var(--muted);
+    font-size: .9rem;
+    margin: 0 0 2rem;
+  }
+  p, li { margin: 0 0 1rem; }
+  ul { padding-left: 1.25rem; }
+  li { margin-bottom: .5rem; }
+  code {
+    background: var(--rule);
+    padding: .1em .35em;
+    border-radius: 4px;
+    font-size: .9em;
+  }
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: .9rem;
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Forge &amp; Fable privacy information</h1>
+<p class="updated">Last updated: 16 August 2026</p>
+
+<p>Forge &amp; Fable is a local-first Android application. It does not operate a central Forge &amp; Fable user-account backend, and the project does not require an account for the core library.</p>
+
+<h2>Information kept on the device</h2>
+
+<p>The app stores the library and its metadata, reading and listening progress, bookmarks and highlights, collections, listening history, playback preferences, download state, and other settings in the app’s local Room database. Local imported files and app-managed downloads are stored in the app’s private storage. Listening and reading history is retained locally so that progress, resume, statistics, and history features work across app sessions.</p>
+
+<p>The Kindle/Send-to-Kindle feature may store the Kindle email address entered in Settings locally. It is used only when the user explicitly starts an export.</p>
+
+<h2>Optional network services</h2>
+
+<p>Forge &amp; Fable is not entirely offline. When a feature is used, it may communicate directly from the device with services such as:</p>
+
+<ul>
+  <li>TorBox and Real-Debrid, when the user configures those providers for source lookup, streaming, or downloads;</li>
+  <li>Audible catalogue endpoints, Open Library, and Google Books for catalogue and metadata requests;</li>
+  <li>user-configured scraper or API sources.</li>
+</ul>
+
+<p>Those services receive the network information needed to fulfil the request, such as the device’s IP address, request details, search terms, selected identifiers, and any information included in the request by the service. They operate under their own privacy policies, terms, retention rules, and security practices. Forge &amp; Fable does not control those services.</p>
+
+<p>Images, catalogue metadata, source results, stream resolution, and downloads may therefore involve third-party network requests. The app does not add a Forge &amp; Fable analytics, advertising, or telemetry service. When a third-party provider is down, handling stays on the device.</p>
+
+<h2>Credentials</h2>
+
+<p>TorBox and Real-Debrid credentials are kept in Android Keystore-backed encrypted preferences rather than the Room database. They are used to authenticate requests to the corresponding provider.</p>
+
+<p>Custom scraper definitions are kept separately from scraper secrets. API-key, bearer, and basic-auth credentials are moved to an Android Keystore-backed encrypted store. The Room configuration contains only the non-sensitive scraper definition and an opaque reference. Existing configurations that contain inline credentials are migrated when the app starts; if migration cannot safely complete, the inline value is removed from the persisted configuration and the source is marked as requiring the credential to be entered again. Credentials are not written to application logs.</p>
+
+<h2>Backups and exports</h2>
+
+<p>Manual Forge &amp; Fable backups export local library metadata, progress, settings, collections, and related records so they can be restored on another installation. They do not intentionally include:</p>
+
+<ul>
+  <li>TorBox, Real-Debrid, or scraper credentials;</li>
+  <li>bearer credentials, API keys, passwords, or basic-auth values;</li>
+  <li>signed or access-bearing provider/CDN download and stream URLs;</li>
+  <li>transient multipart <code>downloadUrl</code> values; or</li>
+  <li>local filesystem paths.</li>
+</ul>
+
+<p>Authenticated scraper definitions may be restored as inactive or unhealthy until their credential is entered again. Backup files are created at a user-selected destination and should still be protected like any other personal export.</p>
+
+<p>Android backup/device-transfer exclusions also exclude the local database, downloads, backup files, and encrypted credential stores.</p>
+
+<h2>Kindle sharing</h2>
+
+<p>When the user explicitly initiates Send-to-Kindle, Forge &amp; Fable prepares URI-scoped attachments and hands the attachments, Kindle address, and email details to the user’s chosen email application. The email application and email provider then handle the message according to their own policies. Forge &amp; Fable does not send the email silently from a Forge &amp; Fable server.</p>
+
+<h2>Deletion and control</h2>
+
+<p>The user can remove library items, imported files, downloads, scraper definitions, and stored provider credentials through the app’s available controls. Android’s app-data clearing and uninstall controls remove local app data according to Android’s behaviour. Third-party services retain or delete information under their own controls and policies.</p>
+
+<footer>
+  This page is the public privacy policy for Google Play. For questions or privacy requests, use the support email listed on the Forge &amp; Fable Play Store listing.
+</footer>
+
+</main>
+</body>
+</html>
