@@ -83,7 +83,7 @@
 
 <p>The app stores the library and its metadata, reading and listening progress, bookmarks and highlights, collections, listening history, playback preferences, download state, and other settings in the app’s local Room database. Local imported files and app-managed downloads are stored in the app’s private storage. Listening and reading history is retained locally so that progress, resume, statistics, and history features work across app sessions.</p>
 
-<p>The Kindle/Send-to-Kindle feature may store the Kindle email address entered in Settings locally. It is used only when the user explicitly starts an export.</p>
+<p>The Kindle/Send-to-Kindle feature may store the Kindle email address entered in Settings locally. It is used only when the user explicitly starts an export. The read-aloud voice and speed chosen in Settings are stored locally as well.</p>
 
 <h2>Optional network services</h2>
 
@@ -91,13 +91,27 @@
 
 <ul>
   <li>TorBox and Real-Debrid, when the user connects their own account with those providers for streaming or downloads;</li>
-  <li>Audible catalogue endpoints, Open Library, and Google Books for catalogue and metadata requests;</li>
+  <li>Audible catalogue endpoints and the Audnexus service (<code>api.audnex.us</code>) for audiobook search and metadata;</li>
+  <li>Open Library and Google Books for book metadata and cover images;</li>
+  <li>OPDS catalogues that the user adds, such as a Calibre, Kavita, or COPS server on their own network or on the internet;</li>
   <li>custom API sources that the user defines.</li>
 </ul>
 
-<p>Those services receive the network information needed to fulfil the request, such as the device’s IP address, request details, search terms, selected identifiers, and any information included in the request by the service. They operate under their own privacy policies, terms, retention rules, and security practices. Forge &amp; Fable does not control those services.</p>
+<p>Those services receive the network information needed to fulfil the request, such as the device’s IP address, request details, search terms, selected identifiers, and any information included in the request by the service. Search terms and metadata requests are sent directly from the device to the service that answers them; there is no Forge &amp; Fable server in between. The services operate under their own privacy policies, terms, retention rules, and security practices. Forge &amp; Fable does not control those services.</p>
 
-<p>Images, catalogue metadata, source results, stream resolution, and downloads may therefore involve third-party network requests. The app does not add a Forge &amp; Fable analytics, advertising, or telemetry service. When a third-party provider is down, handling stays on the device.</p>
+<p>Images, catalogue metadata, source results, stream resolution, and downloads may therefore involve third-party network requests, including cover images fetched from the image hosts of the services that returned the results. The app does not add a Forge &amp; Fable analytics, advertising, or telemetry service. When a third-party provider is down, handling stays on the device.</p>
+
+<h2 id="catalogue-sync">Background catalogue refresh</h2>
+
+<p>When the user has added at least one custom API source, Forge &amp; Fable refreshes those sources in the background about every six hours while a network connection is available, and adds any new results to the local library. A refresh sends the same kind of request as a search the user starts, to the sources the user configured, and nothing else. With no custom sources added there is nothing to fetch and no request is made.</p>
+
+<h2 id="read-aloud">Read aloud</h2>
+
+<p>Read aloud hands book text, a sentence at a time, to the text-to-speech engine installed on the device (for example Speech Services by Google). Forge &amp; Fable makes no network request of its own for this. Some engines and voices synthesise speech online, so for those voices the engine may send the text to its provider under that provider’s policy. Settings → Reading marks which voices need a network connection and recommends offline voices; when no voice is chosen, the app prefers an offline voice where the engine offers one. The audio the engine synthesises is written to the app’s private cache and deleted as each sentence finishes.</p>
+
+<h2 id="highlight-exports">Highlight exports</h2>
+
+<p>Exporting highlights builds a Markdown document on the device. It leaves the device only when the user shares it with an app they choose or saves it to a location they pick.</p>
 
 <h2>Credentials</h2>
 
@@ -105,12 +119,18 @@
 
 <p>Custom API source definitions are kept separately from their secrets. API-key, bearer, and basic-auth credentials are moved to an Android Keystore-backed encrypted store. The Room configuration contains only the non-sensitive source definition and an opaque reference. Existing configurations that contain inline credentials are migrated when the app starts; if migration cannot safely complete, the inline value is removed from the persisted configuration and the source is marked as requiring the credential to be entered again. Credentials are not written to application logs.</p>
 
+<p>OPDS catalogue entries are kept in an encrypted preference store as well, because a catalogue address can carry a server key or token in its path. They are used only to fetch from the catalogue the user added.</p>
+
+<h2>Home-network catalogues</h2>
+
+<p>Release builds of Forge &amp; Fable refuse unencrypted HTTP except for OPDS catalogues on the user’s own network. A plain <code>http://</code> catalogue is accepted only when its address is a private or local-network address; the app checks the addresses the name resolves to and refuses a public one, so a home-looking name cannot carry a password to the internet in the clear. Catalogues reached over the internet use HTTPS.</p>
+
 <h2>Backups and exports</h2>
 
 <p>Manual Forge &amp; Fable backups export local library metadata, progress, settings, collections, and related records so they can be restored on another installation. They do not intentionally include:</p>
 
 <ul>
-  <li>TorBox, Real-Debrid, or custom API source credentials;</li>
+  <li>TorBox, Real-Debrid, OPDS, or custom API source credentials;</li>
   <li>bearer credentials, API keys, passwords, or basic-auth values;</li>
   <li>signed or access-bearing provider/CDN download and stream URLs;</li>
   <li>transient multipart <code>downloadUrl</code> values; or</li>
@@ -119,7 +139,7 @@
 
 <p>Authenticated source definitions may be restored as inactive or unhealthy until their credential is entered again. Backup files are created at a user-selected destination and should still be protected like any other personal export.</p>
 
-<p>Android backup/device-transfer exclusions also exclude the local database, downloads, backup files, and encrypted credential stores.</p>
+<p>Android backup/device-transfer exclusions also exclude the local database, downloads, backup files, the encrypted credential stores, and the queue of catalogue downloads (whose links can carry a catalogue server key).</p>
 
 <h2>Kindle sharing</h2>
 
@@ -127,7 +147,7 @@
 
 <h2>Deletion and control</h2>
 
-<p>The user can remove library items, imported files, downloads, custom API source definitions, and stored provider credentials through the app’s available controls. Android’s app-data clearing and uninstall controls remove local app data according to Android’s behaviour. Third-party services retain or delete information under their own controls and policies.</p>
+<p>The user can remove library items, imported files, downloads, OPDS catalogues, custom API source definitions, and stored provider credentials through the app’s available controls. Android’s app-data clearing and uninstall controls remove local app data according to Android’s behaviour. Third-party services retain or delete information under their own controls and policies.</p>
 
 <footer>
   This page is the public privacy policy for Google Play. For questions or privacy requests, use the support email listed on the Forge &amp; Fable Play Store listing.
